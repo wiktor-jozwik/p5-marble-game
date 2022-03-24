@@ -30,6 +30,8 @@ function draw() {
   
   board.drawPowerRectangle()
 
+  board.collisionCheck()
+
   board.calculateScore()
 
   board.printScore()

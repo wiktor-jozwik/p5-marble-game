@@ -38,18 +38,24 @@ const circlesInfo = [
   },
 ]
 
-
-let player1Color = {
-  r: 0,
-  g: 0,
-  b: 255
+const player1 = {
+  name: "Blue",
+  color: {
+    r: 0,
+    g: 0,
+    b: 255
+  }
 }
 
-let player2Color = {
-  r: 255,
-  g: 0,
-  b: 0
+const player2 = {
+  name: "Red",
+  color: {
+    r: 255,
+    g: 0,
+    b: 0
+  }
 }
+
 
 class Board {
     constructor(width, height) {
@@ -60,20 +66,20 @@ class Board {
         this.scoreCircles = []
     }
 
-    init() {
-      this.players = [new Player('Player1', player1Color), new Player('Player2', player2Color)]
-      this.players[this.currentPlayerIndex].addNewBall()
-      this.initScoreCircles()
-    }
+  init() {
+    this.players = [new Player(player1.name, player1.color), new Player(player2.name, player2.color)]
+    this.players[this.currentPlayerIndex].addNewBall()
+    this.initScoreCircles()
+  }
 
-    initScoreCircles() {
-      let circlePositionX = this.width * (8/10) 
-      let circlePositionY = this.height * (1/2)
-  
-      circlesInfo.forEach(circleInfo => {
-        this.scoreCircles.push(new ScoreCircle(circleInfo.radius, circleInfo.points, circlePositionX, circlePositionY, circleInfo.color))
-      })
-    }
+  initScoreCircles() {
+    let circlePositionX = this.width * (8/10) 
+    let circlePositionY = this.height * (1/2)
+
+    circlesInfo.forEach(circleInfo => {
+      this.scoreCircles.push(new ScoreCircle(circleInfo.radius, circleInfo.points, circlePositionX, circlePositionY, circleInfo.color))
+    })
+  }
 
   drawScoreCircles() {
     let circlePositionX = this.width * (8/10) 
@@ -115,17 +121,35 @@ class Board {
     let vector = createVector(mouseX - currentBall.pos.x, mouseY - currentBall.pos.y)
     currentBall.hit(vector.mag()/25, vector.heading())
 
-    while (true) {
-      if (currentBall.isMoving()) break
-    }
-
   if (this.currentPlayerIndex === 0) {
     this.currentPlayerIndex = 1
   } else {
     this.currentPlayerIndex = 0
   }
 
+  if (currentBall.isMoving()) {
+    console.log('moving')
+  }
+
   this.players[this.currentPlayerIndex].addNewBall()
+}
+
+collisionCheck() {
+  let allBalls = []
+  allBalls.push(...this.players[0].balls)
+  allBalls.push(...this.players[1].balls)
+
+  if (allBalls.length > 1) {
+    for (let i=0; i<allBalls.length-1; i++) {
+      for (let j=0; j<allBalls.length; j++) {
+        if (i != j) {
+          if(allBalls[i].pos.dist(allBalls[j].pos) <= allBalls[i].radius * 2){
+            allBalls[i].collide(allBalls[j]);
+        }
+    }
+  }
+    }
+  }
 }
 
 getCurrentBall() {
