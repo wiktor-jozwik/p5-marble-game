@@ -10,6 +10,11 @@ const delta = 0.8
 
 const backgroundColor = 220
 
+const MAX_MOVES = 2
+
+let canAddNewBall
+let gameOver = false
+
 let board
 
 
@@ -22,23 +27,34 @@ function setup() {
 
 
 function draw() {
-  background(backgroundColor);
+  if (!gameOver) {
+    background(backgroundColor);
+    board.calculateScore()
+    board.printScore()
 
-  board.drawScoreCircles()
+    board.drawScoreCircles()
 
-  board.drawBalls()
+    board.drawBalls()
   
-  board.drawPowerRectangle()
+    if (canAddNewBall) {
+      board.addNewBall()
+    }
+    
+    board.drawPowerRectangle()
+  
+    board.collisionCheck()
+    
+    board.checkIfEndGame()  
+  } 
+  else {
+    background(backgroundColor);
 
-  board.collisionCheck()
-
-  board.calculateScore()
-
-  board.printScore()
+    board.printWinner()
+  }
 }
 
 function mousePressed() {
-    board.mousePressed()
+  board.mousePressed()
 }
 
 

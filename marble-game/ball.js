@@ -7,8 +7,8 @@ class Ball {
     }
     
     show() {
-        if (this.color) {
-            fill(this.color.r, this.color.g, this.color.b)
+      if (this.color) {
+          fill(this.color.r, this.color.g, this.color.b)
         }
       ellipse(this.pos.x, this.pos.y, this.radius*2)
     }
@@ -46,12 +46,12 @@ class Ball {
     }
 
     checkBounce() {
-        if (this.pos.x <= powerRectangleWidth + this.radius || this.pos.x >= boardWidth - this.radius) {
-            this.bounceX()
-          }
-          if (this.pos.y <= this.radius || this.pos.y >= boardHeight - this.radius) {
-            this.bounceY()
-          }
+      if (this.pos.x <= powerRectangleWidth + this.radius || this.pos.x >= boardWidth - this.radius) {
+          this.bounceX()
+        }
+        if (this.pos.y <= this.radius || this.pos.y >= boardHeight - this.radius) {
+          this.bounceY()
+        }
     }
     
     bounceX() {
@@ -61,7 +61,7 @@ class Ball {
         this.velocity.x = abs(this.velocity.x)
       }
     }
-  
+
     bounceY() {
       if (this.pos.y > boardHeight / 2) {
         this.velocity.y = -abs(this.velocity.y)
@@ -71,11 +71,10 @@ class Ball {
     }
 
     isMoving() {
-        return this.velocity.x !== 0 || this.velocity.y !== 0
+      return this.velocity.x !== 0 || this.velocity.y !== 0
     }
 
     isInStartingPostion() {
-        return this.pos.x === startingPositionX && this.pos.y === startingPositionY
+      return this.pos.x === startingPositionX && this.pos.y === startingPositionY
     }
-    
   }
