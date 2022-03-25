@@ -5,8 +5,8 @@ const circlesInfo = [
     points: 4,
     color: {
       r: 0,
-      g: 255,
-      b: 0,
+      g: 80,
+      b: 22,
     }
   },
   {
@@ -14,26 +14,26 @@ const circlesInfo = [
     points: 6,
     color: {
       r: 0,
-      g: 191,
-      b: 255,
+      g: 128,
+      b: 34,
     }
   },
   {
     radius: 50,
     points: 12,
     color: {
-      r: 75,
-      g: 0,
-      b: 130,
+      r: 0,
+      g: 163,
+      b: 43,
     }
   },
   {
     radius: 25,
     points: 20,
     color: {
-      r: 148,
-      g: 0,
-      b: 211,
+      r: 0,
+      g: 252,
+      b: 67,
     }
   },
 ]
@@ -101,7 +101,10 @@ class Board {
   })
     let currentBall = this.getCurrentBall()
     if (currentBall && this.checkIfBallsNotMoving()) {
-      this.arrow(currentBall.pos.x, currentBall.pos.y, mouseX, mouseY);
+      let mouse = createVector(mouseX - startingPositionX, mouseY - startingPositionY)
+      mouse.normalize()
+      mouse.mult(50)
+      this.arrow(currentBall.pos, mouse);
     }
   }
 
@@ -127,13 +130,13 @@ class Board {
   }
 
   drawPowerRectangle() {
-    let currentBall = this.getCurrentBall()
-    if (currentBall) {
-      var dist = Math.sqrt(Math.pow((currentBall.pos.x - mouseX), 2) + Math.pow((currentBall.pos.y - mouseY), 2) )
-  
-      fill(255, 140/dist * 255, 0)
+    if (this.checkIfBallsNotMoving()) {
+      let currentBall = this.getCurrentBall()
+        var dist = Math.sqrt(Math.pow((currentBall.pos.x - mouseX), 2) + Math.pow((currentBall.pos.y - mouseY), 2) )
     
-      rect(0, 0, powerRectangleWidth, boardHeight)
+        fill(255, 140/dist * 255, 0)
+      
+        rect(0, 0, powerRectangleWidth, boardHeight)
     }
   }
 
@@ -184,9 +187,7 @@ collisionCheck() {
               score += circle.points
             }
           })
-          if (score) {
-            player.score = score
-          }
+          player.score = score
         }
       })
     })
@@ -215,10 +216,11 @@ collisionCheck() {
   }
 
   printWinner() {
+    this.calculateScore()
     const winner = this.getWinner()
     let winningMessage
     if (winner) {
-      winningMessage = `${winner.name} has won with: ${winner.score}`
+      winningMessage = `${winner.name} has won with ${winner.score} points`
     } else {
       winningMessage = `It's a tie, both players have got ${this.players[0].score} points`
     }
@@ -229,7 +231,6 @@ collisionCheck() {
   }
 
   getWinner() {
-    this.calculateScore()
     let winner
     if (this.players[0].score > this.players[1].score) {
       winner = this.players[0]
@@ -239,14 +240,18 @@ collisionCheck() {
     return winner
   }
 
-  arrow(x1, y1, x2, y2) {
-    line(x1, y1, x2, y2);
+
+  arrow(base, vec) {
     push();
-    translate(x2, y2);
-    var a = atan2(x1-x2, y2-y1);
-    rotate(a);
-    line(0, 0, -10, -10);
-    line(0, 0, 10, -10);
+    stroke(0);
+    strokeWeight(3);
+    fill(0);
+    translate(base.x, base.y);
+    line(0, 0, vec.x, vec.y);
+    rotate(vec.heading());
+    let arrowSize = 7;
+    translate(vec.mag() - arrowSize, 0);
+    triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
     pop();
   }
 }

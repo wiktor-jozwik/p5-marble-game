@@ -8,7 +8,7 @@ let startingPositionY = boardHeight / 2
 let ballRadius = 10
 const delta = 0.8
 
-const backgroundColor = 220
+const backgroundColor = 240
 
 const MAX_MOVES = 2
 
@@ -19,8 +19,8 @@ let board
 
 
 function setup() {
-    createCanvas(boardWidth, boardHeight);
-    board = new Board(boardWidth, boardHeight)
+  createCanvas(boardWidth, boardHeight);
+  board = new Board(boardWidth, boardHeight)
 
   board.init()
 }
