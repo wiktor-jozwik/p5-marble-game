@@ -1,23 +1,15 @@
 
 const circlesInfo = [
   {
-    radius: 180,
-    points: 4,
+    radius: 20,
+    points: 20,
     color: {
       r: 0,
-      g: 80,
-      b: 22,
+      g: 252,
+      b: 67,
     }
   },
-  {
-    radius: 120,
-    points: 6,
-    color: {
-      r: 0,
-      g: 128,
-      b: 34,
-    }
-  },
+
   {
     radius: 60,
     points: 12,
@@ -28,12 +20,21 @@ const circlesInfo = [
     }
   },
   {
-    radius: 20,
-    points: 20,
+    radius: 120,
+    points: 10,
     color: {
       r: 0,
-      g: 252,
-      b: 67,
+      g: 128,
+      b: 34,
+    }
+  },
+  {
+    radius: 180,
+    points: 6,
+    color: {
+      r: 0,
+      g: 80,
+      b: 22,
     }
   },
 ]
@@ -81,7 +82,7 @@ class Board {
   }
 
   initScoreCircles() {
-    let circlePositionX = this.width * (8/10) 
+    let circlePositionX = this.width * (75/100) 
     let circlePositionY = this.height * (1/2)
 
     circlesInfo.forEach(circleInfo => {
@@ -90,9 +91,11 @@ class Board {
   }
 
   drawScoreCircles() {
-    let circlePositionX = this.width * (8/10) 
+    let circlePositionX = this.width * (75/100) 
     let circlePositionY = this.height * (1/2)
-    this.scoreCircles.forEach(scoreCircle => {
+    const reversedCircles = [...this.scoreCircles].reverse()
+
+    reversedCircles.forEach(scoreCircle => {
       const {r, g, b} = scoreCircle.color
       fill(r, g, b)
       circle(circlePositionX, circlePositionY, scoreCircle.radius*2)
@@ -104,7 +107,6 @@ class Board {
       player.balls.forEach(ball => {
           ball.show()
           ball.update(delta)
-          // ball.checkBounce()
       })
   })
     let currentBall = this.getCurrentBall()
@@ -141,9 +143,9 @@ class Board {
     if (this.checkIfBallsNotMoving()) {
       let currentBall = this.getCurrentBall()
       let dist = currentBall.distanceFromObject(createVector(mouseX, mouseY))
-      fill(255, 255/dist * 255, 0)
+      fill(255, this.width/5/dist * 255, 0)
 
-      let rectangleHeight = this.height - dist / 1.8
+      let rectangleHeight = this.height - dist / (this.width / 550)
       rectangleHeight = rectangleHeight > 0 ? rectangleHeight : 0
     
       rect(0, rectangleHeight, powerRectangleWidth, boardHeight)
@@ -212,11 +214,12 @@ removeBallFromColiding(ball) {
       let score = 0
       player.balls.forEach(ball => {
         if (!ball.isMoving() && !ball.isInStartingPostion()) {
-          this.scoreCircles.forEach(circle => {
+          for (const circle of this.scoreCircles) {
             if (circle.checkIfBallInside(ball.pos.x, ball.pos.y, ball.radius)) {
               score += circle.points
+              break
             }
-          })
+          }
           player.score = score
         }
       })

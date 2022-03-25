@@ -1,5 +1,5 @@
 let boardWidth = 1200
-let boardHeight = 600
+let boardHeight = 500
 let powerRectangleWidth = 15
 
 let startingPositionX = boardWidth / 10
@@ -19,15 +19,10 @@ let board
 
 
 function setup() {
-  let canvas = createCanvas(boardWidth, boardHeight);
-  canvas.mouseClicked(playerMove)
+  createCanvas(boardWidth, boardHeight);
 
   board = new Board(boardWidth, boardHeight)
   board.init()
-
-  let resetButton = createButton("Reset game");
-  resetButton.addClass('reset-button')
-  resetButton.mouseClicked(resetGame);
 }
 
 
@@ -62,7 +57,7 @@ function resetGame() {
   board.resetGame()
 }
 
-function playerMove() {
+function mouseClicked() {
   board.playerMove()
 }
   

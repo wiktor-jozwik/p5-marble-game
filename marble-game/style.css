@@ -15,7 +15,7 @@ canvas {
     border: 5px solid black;
   }
 
-  .reset-button { 
+  .reset-game { 
       position: absolute;
       left: 50%;
       top: 5%;
