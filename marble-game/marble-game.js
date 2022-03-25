@@ -1,5 +1,5 @@
-let boardWidth = 1000
-let boardHeight = 500
+let boardWidth = 1200
+let boardHeight = 600
 let powerRectangleWidth = 15
 
 let startingPositionX = boardWidth / 10
@@ -10,7 +10,7 @@ const delta = 0.8
 
 const backgroundColor = 240
 
-const MAX_MOVES = 2
+const MAX_MOVES = 20
 
 let canAddNewBall
 let gameOver = false
@@ -19,10 +19,15 @@ let board
 
 
 function setup() {
-  createCanvas(boardWidth, boardHeight);
-  board = new Board(boardWidth, boardHeight)
+  let canvas = createCanvas(boardWidth, boardHeight);
+  canvas.mouseClicked(playerMove)
 
+  board = new Board(boardWidth, boardHeight)
   board.init()
+
+  let resetButton = createButton("Reset game");
+  resetButton.addClass('reset-button')
+  resetButton.mouseClicked(resetGame);
 }
 
 
@@ -53,9 +58,11 @@ function draw() {
   }
 }
 
-function mousePressed() {
-  board.mousePressed()
+function resetGame() {
+  board.resetGame()
 }
 
-
+function playerMove() {
+  board.playerMove()
+}
   

@@ -1,7 +1,7 @@
 
 const circlesInfo = [
   {
-    radius: 150,
+    radius: 180,
     points: 4,
     color: {
       r: 0,
@@ -10,7 +10,7 @@ const circlesInfo = [
     }
   },
   {
-    radius: 100,
+    radius: 120,
     points: 6,
     color: {
       r: 0,
@@ -19,7 +19,7 @@ const circlesInfo = [
     }
   },
   {
-    radius: 50,
+    radius: 60,
     points: 12,
     color: {
       r: 0,
@@ -28,7 +28,7 @@ const circlesInfo = [
     }
   },
   {
-    radius: 25,
+    radius: 20,
     points: 20,
     color: {
       r: 0,
@@ -39,10 +39,10 @@ const circlesInfo = [
 ]
 
 const player1 = {
-  name: "Blue",
+  name: "White",
   color: {
-    r: 0,
-    g: 0,
+    r: 255,
+    g: 255,
     b: 255
   }
 }
@@ -64,12 +64,20 @@ class Board {
     this.players = []
     this.currentPlayerIndex = 0
     this.scoreCircles = []
+    this.collidingBalls = []
   }
 
   init() {
     this.players = [new Player(player1.name, player1.color), new Player(player2.name, player2.color)]
     this.players[this.currentPlayerIndex].addNewBall()
     this.initScoreCircles()
+  }
+
+  resetGame() {
+    this.players = []
+    this.scoreCircles = []
+    this.currentPlayerIndex = 0
+    this.init()
   }
 
   initScoreCircles() {
@@ -96,7 +104,7 @@ class Board {
       player.balls.forEach(ball => {
           ball.show()
           ball.update(delta)
-          ball.checkBounce()
+          // ball.checkBounce()
       })
   })
     let currentBall = this.getCurrentBall()
@@ -132,16 +140,19 @@ class Board {
   drawPowerRectangle() {
     if (this.checkIfBallsNotMoving()) {
       let currentBall = this.getCurrentBall()
-        var dist = Math.sqrt(Math.pow((currentBall.pos.x - mouseX), 2) + Math.pow((currentBall.pos.y - mouseY), 2) )
+      let dist = currentBall.distanceFromObject(createVector(mouseX, mouseY))
+      fill(255, 255/dist * 255, 0)
+
+      let rectangleHeight = this.height - dist / 1.8
+      rectangleHeight = rectangleHeight > 0 ? rectangleHeight : 0
     
-        fill(255, 140/dist * 255, 0)
-      
-        rect(0, 0, powerRectangleWidth, boardHeight)
+      rect(0, rectangleHeight, powerRectangleWidth, boardHeight)
     }
   }
 
-  mousePressed() {
+  playerMove() {
     if (this.checkIfBallsNotMoving()) {
+      this.collidingBalls = []
       canAddNewBall = true
       let currentBall = this.getCurrentBall()
   
@@ -161,15 +172,34 @@ collisionCheck() {
   allBalls.push(...this.players[0].balls)
   allBalls.push(...this.players[1].balls)
 
-    for (const ball1 of allBalls) {
-      for (const ball2 of allBalls) {
-        if (ball1 !== ball2) {
-          if(ball1.pos.dist(ball2.pos) <= ball1.radius * 2) {
-            ball1.collide(ball2)
-          }
-      }
+  for (const ball1 of allBalls) {
+    for (const ball2 of allBalls) {
+      if (ball1 !== ball2) {
+        if(!this.searchIfBallsAmongCollided(ball1, ball2) && ball1.pos.dist(ball2.pos) <= ball1.radius * 2) {
+          this.collidingBalls = []
+          this.collidingBalls.push([ball1, ball2])
+
+          ball1.collide(ball2)
+        }
+    }
+    let bounced1 = ball1.checkBounce()
+    let bounced2 = ball2.checkBounce()
+    if (bounced1) {
+      this.removeBallFromColiding(ball1)
+    } 
+    if (bounced2) {
+      this.removeBallFromColiding(ball2)
     }
   }
+  }
+}
+
+searchIfBallsAmongCollided(ball1, ball2) {
+  return (this.collidingBalls.filter(balls => balls.includes(ball1) && balls.includes(ball2))).length > 0
+}
+
+removeBallFromColiding(ball) {
+  this.collidingBalls = this.collidingBalls.filter(balls => !balls.includes(ball))
 }
 
   getCurrentBall() {

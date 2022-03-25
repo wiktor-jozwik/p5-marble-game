@@ -35,12 +35,16 @@ class Ball {
 
     collide(ball) {
       console.log('collision')
-      var a = this.pos.copy().sub(ball.pos).heading();
-      this.pos = ball.pos.copy().add(this.polar(this.radius*2, a));
-      var A1 = this.velocity.heading() - a;
-      var A2 = ball.velocity.heading() - a;
-      var V1 = this.polar(this.velocity.mag()*cos(A1), a);
-      var V2 = this.polar(ball.velocity.mag()*cos(A2), a);
+      let angle = this.pos.copy().sub(ball.pos).heading();
+
+      this.pos = ball.pos.copy().add(this.polar(this.radius*2, angle));
+      
+      var A1 = this.velocity.heading() - angle;
+      var A2 = ball.velocity.heading() - angle;
+      
+      var V1 = this.polar(this.velocity.mag()*cos(A1), angle);
+      var V2 = this.polar(ball.velocity.mag()*cos(A2), angle);
+      
       this.velocity.sub(V1).add(V2);
       ball.velocity.sub(V2).add(V1);
     }
@@ -48,10 +52,13 @@ class Ball {
     checkBounce() {
       if (this.pos.x <= powerRectangleWidth + this.radius || this.pos.x >= boardWidth - this.radius) {
           this.bounceX()
+          return true
         }
         if (this.pos.y <= this.radius || this.pos.y >= boardHeight - this.radius) {
           this.bounceY()
+          return true
         }
+      return false
     }
     
     bounceX() {
@@ -68,6 +75,10 @@ class Ball {
       } else {
         this.velocity.y = abs(this.velocity.y)
       }
+    }
+
+    distanceFromObject(vector) {
+      return Math.sqrt(Math.pow((this.pos.x - vector.x), 2) + Math.pow((this.pos.y - vector.y), 2))
     }
 
     isMoving() {
