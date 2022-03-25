@@ -6,9 +6,8 @@ class Player {
         this.score = 0
     }
 
-
     addNewBall() {
-        let newBall = new Ball(createVector(startingPositionX, startingPositionY), ballRadius, this.ballColor)
+        let newBall = new Ball(createVector(STARTING_POSITION_X, STARTING_POSITION_Y), BALL_RADIUS, this.ballColor)
         this.balls.push(newBall)
     }
 }
