@@ -1,4 +1,5 @@
 let board
+let electroBallsNumber = 0
 
 function setup() {
     createCanvas(BOARD_WIDTH, BOARD_HEIGHT);
@@ -18,6 +19,8 @@ function draw() {
 
         board.addNewBall()
         board.drawPowerRectangle()
+
+        board.checkForElectro()
 
         board.checkForCollision()
     } else {

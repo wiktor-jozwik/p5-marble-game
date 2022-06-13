@@ -115,8 +115,7 @@ class Board {
 
     checkForCollision() {
         let allBalls = []
-        allBalls.push(...this.players[0].balls)
-        allBalls.push(...this.players[1].balls)
+        this.players.forEach(player => allBalls.push(...player.balls))
 
         for (const ball1 of allBalls) {
             for (const ball2 of allBalls) {
@@ -135,6 +134,47 @@ class Board {
                 }
                 if (bounced2) {
                     this.removeBallFromColliding(ball2)
+                }
+            }
+        }
+    }
+
+    checkForElectro() {
+        let allBalls = []
+        this.players.forEach(player => allBalls.push(...player.balls))
+
+        allBalls = allBalls.filter(ball => !ball.isInStartingPostion()).sort(() => (Math.random() > 0.5) ? 1 : -1)
+        let force = createVector(0, 0)
+
+        for (const ball1 of allBalls) {
+            for (const ball2 of allBalls) {
+                if (ball1 !== ball2) {
+                    if (!this.searchIfBallsAmongColliding(ball1, ball2) && ball1.pos.dist(ball2.pos) <= ball1.radius * 2) {
+                        this.collidingBalls = []
+                        this.collidingBalls.push([ball1, ball2])
+
+                        ball1.collide(ball2)
+                    }
+                    let bounced1 = ball1.checkBounce()
+                    let bounced2 = ball2.checkBounce()
+                    if (bounced1) {
+                        this.removeBallFromColliding(ball1)
+                    }
+                    if (bounced2) {
+                        this.removeBallFromColliding(ball2)
+                    }
+
+                    
+                    if (ball1.q === 0 || ball2.q === 0) {
+                        continue
+                    }
+                    force.add(eForce(ball1.q, ball1.pos, ball2.q, ball2.pos))
+
+                    if (force.mag() > E_FORCE_MARGIN) {
+                        ball1.velocity.add(force.copy().div(100));
+
+                        ball2.velocity.sub(force.copy().div(100))
+                    }
                 }
             }
         }
@@ -205,7 +245,7 @@ class Board {
 
         textSize(20)
         fill(0, 0, 0)
-        text(winningMessage, this.width / 3, this.height / 2)
+        text(winningMessage, this.width / 2.5, this.height / 2)
     }
 
     getWinner() {

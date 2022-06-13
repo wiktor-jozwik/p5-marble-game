@@ -67,4 +67,14 @@ const BACKGROUND_COLOR = 240
 
 const UPDATE_BALL_DELTA = 0.8
 
-const MAX_MOVES = 20
+const BASE_FRICTION_COEFFICIENT = 0.98
+
+const MAX_MOVES = 10
+
+const Q_PROBABILITY = 0.4
+const MAX_ELECTRO_BALLS = MAX_MOVES / 2
+
+const MIN_Q = 1e-3
+const MAX_Q = 2e-3
+
+const E_FORCE_MARGIN = 0.75
