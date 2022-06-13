@@ -31,3 +31,10 @@
 Grę w każdym momencie można zresetować poprzez przycisk **Reset** na górze planszy:
 
 <img width="1196" alt="image" src="https://user-images.githubusercontent.com/25511662/173401279-a4feb779-7bcc-4c66-acb9-cccf95cfc7b1.png">
+
+
+### Aby uruchomić grę należy
+
+- uruchomić serwer na konkretnym porcie np. Live Server w Visual Studio Code będąc w folderze z projektem
+- przejść pod adres http://127.0.0.1:{port} np. http://127.0.0.1:5500
+- przejść do widniejącego folderu *marble-game*
