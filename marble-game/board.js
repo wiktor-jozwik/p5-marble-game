@@ -119,22 +119,7 @@ class Board {
 
         for (const ball1 of allBalls) {
             for (const ball2 of allBalls) {
-                if (ball1 !== ball2) {
-                    if (!this.searchIfBallsAmongColliding(ball1, ball2) && ball1.pos.dist(ball2.pos) <= ball1.radius * 2) {
-                        this.collidingBalls = []
-                        this.collidingBalls.push([ball1, ball2])
-
-                        ball1.collide(ball2)
-                    }
-                }
-                let bounced1 = ball1.checkBounce()
-                let bounced2 = ball2.checkBounce()
-                if (bounced1) {
-                    this.removeBallFromColliding(ball1)
-                }
-                if (bounced2) {
-                    this.removeBallFromColliding(ball2)
-                }
+                this.checkBallsBounce(ball1, ball2)
             }
         }
     }
@@ -149,23 +134,8 @@ class Board {
         for (const ball1 of allBalls) {
             for (const ball2 of allBalls) {
                 if (ball1 !== ball2) {
-                    if (!this.searchIfBallsAmongColliding(ball1, ball2) && ball1.pos.dist(ball2.pos) <= ball1.radius * 2) {
-                        this.collidingBalls = []
-                        this.collidingBalls.push([ball1, ball2])
-
-                        ball1.collide(ball2)
-                    }
-                    let bounced1 = ball1.checkBounce()
-                    let bounced2 = ball2.checkBounce()
-                    if (bounced1) {
-                        this.removeBallFromColliding(ball1)
-                    }
-                    if (bounced2) {
-                        this.removeBallFromColliding(ball2)
-                    }
-
-                    
                     if (ball1.q === 0 || ball2.q === 0) {
+                        this.checkBallsBounce(ball1, ball2)
                         continue
                     }
                     force.add(eForce(ball1.q, ball1.pos, ball2.q, ball2.pos))
@@ -177,6 +147,25 @@ class Board {
                     }
                 }
             }
+        }
+    }
+
+    checkBallsBounce(ball1, ball2) {
+        if (ball1 !== ball2) {
+            if (!this.searchIfBallsAmongColliding(ball1, ball2) && ball1.pos.dist(ball2.pos) <= ball1.radius * 2) {
+                this.collidingBalls = []
+                this.collidingBalls.push([ball1, ball2])
+
+                ball1.collide(ball2)
+            }
+        }
+        let bounced1 = ball1.checkBounce()
+        let bounced2 = ball2.checkBounce()
+        if (bounced1) {
+            this.removeBallFromColliding(ball1)
+        }
+        if (bounced2) {
+            this.removeBallFromColliding(ball2)
         }
     }
 
@@ -226,7 +215,7 @@ class Board {
             ballsCount += player.balls.length
         })
 
-        if (ballsCount > MAX_MOVES * 2) {
+        if (ballsCount > MAX_MOVES * 2 && this.checkIfBallsNotMoving()) {
             this.canAddNewBall = false
             return true
         }
