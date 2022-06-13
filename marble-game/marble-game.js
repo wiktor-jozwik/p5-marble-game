@@ -35,6 +35,8 @@ function resetGame() {
 }
 
 function mouseClicked() {
-    board.playerMove()
+    if (!board.checkIfEndGame()) {
+        board.playerMove()
+    }
 }
   
