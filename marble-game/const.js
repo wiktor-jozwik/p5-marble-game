@@ -71,10 +71,21 @@ const BASE_FRICTION_COEFFICIENT = 0.98
 
 const MAX_MOVES = 10
 
-const Q_PROBABILITY = 0.4
+const Q_PROBABILITY = 0.5
 const MAX_ELECTRO_BALLS = MAX_MOVES / 2
 
 const MIN_Q = 1e-3
 const MAX_Q = 2e-3
+
+const MIN_B = -0.5e2
+const MAX_B = 0.5e2
+
+const MIN_X_B = 400
+const MAX_X_B = 900
+const MIN_Y_B = 125
+const MAX_Y_B = 375
+
+const MIN_B_RADIUS = 20
+const MAX_B_RADIUS = 150
 
 const E_FORCE_MARGIN = 0.75

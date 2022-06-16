@@ -17,6 +17,8 @@ class Board {
         this.players = [new Player(PLAYER_1.name, PLAYER_1.color), new Player(PLAYER_2.name, PLAYER_2.color)]
         this.players[this.currentPlayerIndex].addNewBall()
         this.initScoreCircles()
+
+        this.BPoints = this.createMagneticPoints(4)
     }
 
     initScoreCircles() {
@@ -44,6 +46,17 @@ class Board {
             const {r, g, b} = scoreCircle.color
             fill(r, g, b)
             circle(circlePositionX, circlePositionY, scoreCircle.radius * 2)
+        })
+    }
+
+    drawMagnetic() {
+        this.BPoints.forEach(point => {
+            if (point.value > 0) {
+                fill(255, 0, 0)
+            } else {
+                fill(0, 0, 255)
+            }
+            circle(point.x, point.y, 8)
         })
     }
 
@@ -150,6 +163,26 @@ class Board {
         }
     }
 
+    checkForMagnetic() {
+        let allBalls = []
+        this.players.forEach(player => allBalls.push(...player.balls))
+
+        allBalls = allBalls.filter(ball => !ball.isInStartingPostion()).sort(() => (Math.random() > 0.5) ? 1 : -1)
+        for (const ball of allBalls) {
+            this.BPoints.forEach(point => {
+                if (dist(ball.pos.x, ball.pos.y, point.x, point.y) <= point.radius) {
+                    let angle = createVector(point.x, point.y).copy().sub(ball.pos).heading();
+
+                    const value = -point.value * ball.q
+
+                    const f = createVector(value * cos(angle), value * (angle));
+
+                    ball.velocity.add(f)
+                }
+            })
+        }
+    }
+
     checkBallsBounce(ball1, ball2) {
         if (ball1 !== ball2) {
             if (!this.searchIfBallsAmongColliding(ball1, ball2) && ball1.pos.dist(ball2.pos) <= ball1.radius * 2) {
@@ -180,6 +213,18 @@ class Board {
     getCurrentBall() {
         let balls = this.players[this.currentPlayerIndex].balls
         return balls[balls.length - 1]
+    }
+
+    createMagneticPoints(num) {
+        const magneticBalls = []
+        while(num--) {
+            const randomX = randomIntInRange(MIN_X_B, MAX_X_B)
+            const randomY = randomIntInRange(MIN_Y_B, MAX_Y_B)
+            const randomB = randomFloatInRange(MIN_B, MAX_B)
+            const randomRadius = randomIntInRange(MIN_B_RADIUS, MAX_B_RADIUS)
+            magneticBalls.push(new MagneticPoint(randomX, randomY, randomB, randomRadius))
+        }
+        return magneticBalls
     }
 
     calculateScore() {

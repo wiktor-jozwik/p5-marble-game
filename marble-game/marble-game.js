@@ -15,12 +15,17 @@ function draw() {
         board.printScore()
 
         board.drawScoreCircles()
+
+        board.drawMagnetic()
+        
         board.drawBalls()
 
         board.addNewBall()
         board.drawPowerRectangle()
 
         board.checkForElectro()
+
+        board.checkForMagnetic()
 
         board.checkForCollision()
     } else {
